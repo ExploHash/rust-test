@@ -1,4 +1,4 @@
-use std::string;
+use std::io;
 
 const MAJOR_INTERVALS: [i8; 7] = [2, 2, 1, 2, 2, 2, 1];
 const MINOR_INTERVALS: [i8; 7] = [2, 1, 2, 2, 1, 2, 2];
@@ -12,7 +12,7 @@ fn main() {
     let scale_type = ask_for_input("Enter scale type (major, minor): ");
 
     //Find scale pitches
-    let pitches = calculate_pitches(root_note, scale_type);
+    let pitches = calculate_pitches(&root_note, &scale_type);
 
     //Print results
     for pitch in pitches {
@@ -24,11 +24,11 @@ fn main() {
 fn ask_for_input(question: &str) -> String {
     let mut input = String::new();
     println!("{}", question);
-    std::io::stdin().read_line(&mut input).expect("Failed to read line");
+    io::stdin().read_line(&mut input).expect("Failed to read line");
     input.trim().to_string()
 }
 
-fn calculate_pitches(root_note: String, scale_type: String) -> Vec<String> {
+fn calculate_pitches(root_note: &str, scale_type: &str) -> Vec<String> {
     let mut pitches: Vec<String> = Vec::new();
 
     let root_note_index = NOTES.iter().position(|&n| n == root_note).unwrap();
@@ -43,7 +43,7 @@ fn calculate_pitches(root_note: String, scale_type: String) -> Vec<String> {
     for note_counter in 0..7 {
         diff += intervals[note_counter];
         let note_index: usize = (root_note_index + diff as usize) % NOTES.len();
-        pitches.push(NOTES[note_index as usize].to_string());
+        pitches.push(NOTES[note_index].to_string());
     }
     pitches
 }
